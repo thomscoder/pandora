@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"pandora/engine/css"
 	"pandora/engine/html"
 )
 
@@ -17,10 +19,14 @@ func check(err error) {
 
 func main() {
 	_html, err := ioutil.ReadFile("example.html")
+	_css, err := ioutil.ReadFile("example.css")
 
 	check(err)
 
 	root, err := html.ParseHTML(string(_html))
+	c, err := css.ParseCSS(string(_css))
+
+	fmt.Println(c.String())
 
 	check(err)
 
