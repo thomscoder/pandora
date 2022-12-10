@@ -1,4 +1,13 @@
-.something {
-    font-size: 12px;
-    background-color: red;
+html {
+    font-weight: 100;
 }
+
+#container {
+    font-family: serif;
+}
+
+.paragraph {
+    font-family: sans-serif;
+}
+
+

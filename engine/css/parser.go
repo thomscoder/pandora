@@ -57,7 +57,8 @@ func ParseCSS(css string) (*Stylesheet, error) {
 
 func tokenize(css string) []string {
 	// split into tokens
-	regex := regexp.MustCompile("([^{]*{|}[^}]*}|[^{};]*;|[^{}]*)")
+	regex := regexp.MustCompile(`(.*[^\s])\s?`)
+
 	tokens := regex.FindAllString(css, -1)
 
 	return tokens

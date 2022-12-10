@@ -6,6 +6,7 @@ import (
 	"log"
 	"pandora/engine/css"
 	"pandora/engine/html"
+	"pandora/engine/render"
 )
 
 // A browser engine, also known as a layout engine or rendering engine,
@@ -26,9 +27,9 @@ func main() {
 	root, err := html.ParseHTML(string(_html))
 	c, err := css.ParseCSS(string(_css))
 
-	fmt.Println(c.String())
+	fmt.Println(render.NewRenderTree(root, c).String())
 
 	check(err)
 
-	html.PrintTree(root, 0)
+	//html.PrintTree(root, 0)
 }
