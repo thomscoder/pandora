@@ -1,13 +1,26 @@
 html {
-    font-weight: 100;
+    background-color: rgb(255, 0, 0);
+    height: 200px;
+    width: 200px;
 }
 
 #container {
-    font-family: serif;
+    display: block;
+    top: 20px;
+    left: 20px;
+    background-color: rgb(46, 0, 0);
+    width: 100px;
+    height: 50px;
 }
 
 .paragraph {
-    font-family: sans-serif;
+    display: block;
+    top: 20px;
+    left:40px; 
+    margin: 20px;
+    height: 10px;
+    width: 100px;
+    background-color: rgb(234, 255, 0);
 }
 
 

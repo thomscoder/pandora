@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"pandora/engine/css"
@@ -27,7 +26,13 @@ func main() {
 	root, err := html.ParseHTML(string(_html))
 	c, err := css.ParseCSS(string(_css))
 
-	fmt.Println(render.NewRenderTree(root, c).String())
+	renderTree := render.NewRenderTree(root, c)
+
+	displayList := render.NewLayoutTree(renderTree).BuildDisplayList()
+
+	for _, d := range displayList {
+		render.PaintNode(d)
+	}
 
 	check(err)
 
