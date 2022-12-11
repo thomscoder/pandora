@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"image"
 	"image/color"
 	"image/draw"
@@ -23,10 +24,17 @@ func check(err error) {
 }
 
 func main() {
-	_html, err := ioutil.ReadFile("example/example.html")
+	htmlFile := flag.String("html", "example/example.html", "the name of the html to search")
+	cssFile := flag.String("css", "example/example.css", "the name of the html to search")
+
+	// Parse the command-line flags
+	flag.Parse()
+
+	// Print the value of the flag
+	_html, err := ioutil.ReadFile(*htmlFile)
 	check(err)
 
-	_css, err := ioutil.ReadFile("example/example.css")
+	_css, err := ioutil.ReadFile(*cssFile)
 	check(err)
 
 	rootNode, err := html.ParseHTML(string(_html))

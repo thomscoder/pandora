@@ -32,6 +32,18 @@ Reading this amazing articles about building a <a href="https://limpet.net/mbrub
 - Creates a `Display List`
 - Renders, creating a `.png` image
 
+# How to use ❓
+
+To render the html and css in `example/*`
+
+```bash
+pandora --html example/example.html --css example/example
+```
+
+Pandora supports `background-color` `top` `left` `margin` `margin-top` etc...
+Follow the Css sample.
+Obviously you can contribute whenever you want to make Pandora support more stuff !!
+
 # Requirements ✋
 
 - Go
@@ -39,9 +51,10 @@ Reading this amazing articles about building a <a href="https://limpet.net/mbrub
 
 # Roadmap
 
-1. <h3>Display block / inline / inline - block</h3>
+1. <h3>Fonts</h3>
+2. <h3>Display block / inline / inline - block</h3>
 
-2. <h3>Wasi support</h3>
+3. <h3>Wasi support</h3>
 
 # Contributing
 
