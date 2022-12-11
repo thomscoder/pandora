@@ -1,6 +1,6 @@
 # Pandora 🏺✨
 
-Pandora is toy browser engine written in Golang.
+Pandora is toy browser engine written in Golang and compiled in WASI.
 Because why not?
 
 (I just wanted to know how browser render stuff, so I tried to build a browser engine that receives `html` and `css` and outputs a `png`).
@@ -36,8 +36,22 @@ Reading this amazing articles about building a <a href="https://limpet.net/mbrub
 
 To render the html and css in `example/*`
 
+Pandora can be compiled and used as a normal Go program
+
+```bash
+pandora
+```
+
 ```bash
 pandora --html example/example.html --css example/example
+```
+
+Pandora can also be used as a WASI
+
+With WASMTIME
+
+```bash
+wasmtime --dir . main.wasm -- --html example/example.html --css example/example.css
 ```
 
 Pandora supports `background-color` `top` `left` `margin` `margin-top` etc...
@@ -47,14 +61,26 @@ Obviously you can contribute whenever you want to make Pandora support more stuf
 # Requirements ✋
 
 - Go
-- Make
+- TinyGo
+- Wasmtime / wasmer or any WASI runtime
+
+Build
+
+Go
+```bash
+go build
+```
+
+WASI
+
+```bash
+tinygo build -wasm-abi=generic -target=wasi -o main.wasm main.go
+```
 
 # Roadmap
 
 1. <h3>Fonts</h3>
 2. <h3>Display block / inline / inline - block</h3>
-
-3. <h3>Wasi support</h3>
 
 # Contributing
 
