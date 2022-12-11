@@ -1,26 +1,39 @@
 html {
-    background-color: rgb(255, 0, 0);
-    height: 200px;
-    width: 200px;
+    background-color: rgb(255, 224, 193);
+    width: 500px;
+    height: 500px;
+}
+
+body {
+    display: block;
+    background-color: rgb(99, 35, 0);
+    width: 480px;
+    height: 480px;
+    top: 10px;
+    left: 10px;
 }
 
 #container {
-    display: block;
-    top: 20px;
-    left: 20px;
-    background-color: rgb(46, 0, 0);
-    width: 100px;
-    height: 50px;
+    background-color: rgb(0, 126, 164);
+    width: 280px;
+    height: 280px;
+    top: 100px;
+    left: 100px;
 }
 
 .paragraph {
-    display: block;
-    top: 20px;
-    left:40px; 
-    margin: 20px;
-    height: 10px;
-    width: 100px;
-    background-color: rgb(234, 255, 0);
+    background-color: rgb(228, 139, 255);
+    width: 50px;
+    height: 100px;
+    top: 10px;
+    left: 10px;
 }
 
+.another-text {
+    background-color: rgb(0, 58, 103);
+    width: 50px;
+    height: 80px;
+    top: 120px;
+    left: 10px;
+}
 

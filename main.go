@@ -1,8 +1,13 @@
 package main
 
 import (
+	"image"
+	"image/color"
+	"image/draw"
+	"image/png"
 	"io/ioutil"
 	"log"
+	"os"
 	"pandora/engine/css"
 	"pandora/engine/html"
 	"pandora/engine/render"
@@ -19,22 +24,33 @@ func check(err error) {
 
 func main() {
 	_html, err := ioutil.ReadFile("example.html")
-	_css, err := ioutil.ReadFile("example.css")
-
 	check(err)
 
-	root, err := html.ParseHTML(string(_html))
-	c, err := css.ParseCSS(string(_css))
+	_css, err := ioutil.ReadFile("example.css")
+	check(err)
 
-	renderTree := render.NewRenderTree(root, c)
+	rootNode, err := html.ParseHTML(string(_html))
+	check(err)
 
-	displayList := render.NewLayoutTree(renderTree).BuildDisplayList()
+	stylesheet, err := css.ParseCSS(string(_css))
+	check(err)
 
-	for _, d := range displayList {
-		render.PaintNode(d)
+	renderTree := render.NewRenderTree(rootNode, stylesheet)
+
+	layoutTree := render.NewLayoutTree(renderTree)
+	displayList := layoutTree.BuildDisplayList()
+
+	file, err := os.Create("image.png")
+	defer file.Close()
+
+	img := image.NewRGBA(image.Rect(0, 0, 500, 500))
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.ZP, draw.Src)
+
+	for _, item := range displayList {
+		render.PaintNode(file, img, item)
 	}
 
-	check(err)
-
-	//html.PrintTree(root, 0)
+	if err := png.Encode(file, img); err != nil {
+		panic(err)
+	}
 }

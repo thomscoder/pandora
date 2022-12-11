@@ -1,5 +1,12 @@
 package render
 
+// A layout tree is a data structure used by a web browser to represent the hierarchical layout of the elements on the page.
+// It is typically used by the browser to calculate the positions and sizes of the elements on the page,
+// as well as their relationships with each other.
+
+// When rendering a web page, the browser uses the layout tree to determine the positions and sizes of the elements on the page.
+// This allows the browser to correctly position and size the elements, and to lay out the elements in a hierarchical manner.
+
 import (
 	"bytes"
 	"fmt"
@@ -25,14 +32,13 @@ type Box struct {
 	Position Point
 }
 
-func (b *Box) String() string {
-	// Use the fmt.Sprintf function to generate a string representation of the Box properties
-	return fmt.Sprintf("Box{Width: %d, Height: %d, Padding: %d, Margin: %d, Position: Point{X: %d, Y: %d}}", b.Width, b.Height, b.Padding, b.Margin, b.Position.X, b.Position.Y)
-}
-
 type Point struct {
 	X int
 	Y int
+}
+
+func (b *Box) String() string {
+	return fmt.Sprintf("Box{Width: %d, Height: %d, Padding: %d, Margin: %d, Position: Point{X: %d, Y: %d}}", b.Width, b.Height, b.Padding, b.Margin, b.Position.X, b.Position.Y)
 }
 
 func (lt *LayoutTree) String() string {
@@ -41,16 +47,13 @@ func (lt *LayoutTree) String() string {
 
 func layoutTreeToString(node *LayoutNode, indent int) string {
 	var buffer bytes.Buffer
-	// Add indentation
 	for i := 0; i < indent; i++ {
 		buffer.WriteString("  ")
 	}
 
-	// Add the box's dimensions and position
 	buffer.WriteString(fmt.Sprintf("(%d,%d) %dx%d", node.Box.Position.X, node.Box.Position.Y, node.Box.Width, node.Box.Height))
 	buffer.WriteString("\n")
 
-	// Recursively add the node's children
 	for _, child := range node.Children {
 		buffer.WriteString(layoutTreeToString(child, indent+1))
 	}
@@ -58,6 +61,7 @@ func layoutTreeToString(node *LayoutNode, indent int) string {
 	return buffer.String()
 }
 
+// create the layout tree
 func NewLayoutTree(renderTree *RenderTree) *LayoutTree {
 	root := buildLayoutTree(renderTree.Root, Point{X: 0, Y: 0})
 	return &LayoutTree{
@@ -66,12 +70,16 @@ func NewLayoutTree(renderTree *RenderTree) *LayoutTree {
 }
 
 func buildLayoutTree(renderNode *RenderNode, position Point) *LayoutNode {
+	pos := Point{
+		Y: position.Y + parseStyle(renderNode.Styles["top"], 0) + parseStyle(renderNode.Styles["margin"], 0) + parseStyle(renderNode.Styles["margin-top"], 0) - parseStyle(renderNode.Styles["margin-bottom"], 0),
+		X: position.X + parseStyle(renderNode.Styles["left"], 0) + parseStyle(renderNode.Styles["margin"], 0) - parseStyle(renderNode.Styles["margin-right"], 0),
+	}
+
 	box := &Box{
-		Width:    parseStyle(renderNode.Styles["width"], 100),
-		Height:   parseStyle(renderNode.Styles["height"], 100),
-		Padding:  parseStyle(renderNode.Styles["padding"], 0),
+		Width:    parseStyle(renderNode.Styles["width"], 0),
+		Height:   parseStyle(renderNode.Styles["height"], 0),
 		Margin:   parseStyle(renderNode.Styles["margin"], 0),
-		Position: Point{X: parseStyle(renderNode.Styles["top"], 0), Y: parseStyle(renderNode.Styles["left"], 0)},
+		Position: pos,
 	}
 
 	layoutNode := &LayoutNode{
@@ -82,6 +90,7 @@ func buildLayoutTree(renderNode *RenderNode, position Point) *LayoutNode {
 
 	childX := box.Position.X + box.Margin + box.Padding
 	childY := box.Position.Y + box.Margin + box.Padding
+
 	for _, child := range renderNode.Children {
 		display := child.Styles["display"]
 		if display == "block" {

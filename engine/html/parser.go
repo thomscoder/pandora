@@ -25,6 +25,8 @@ import (
 // These steps are typically performed by the browser engine itself,
 // but you could also add them to your HTML parser if desired.
 
+// The HTML parsing algorithm -> https://html.spec.whatwg.org/multipage/parsing.html#parsing
+
 type Node struct {
 	Name string
 

@@ -1,103 +1,82 @@
 package render
 
 import (
-	"fmt"
+	"image"
+	"image/color"
+	"os"
 	"strconv"
 	"strings"
 
-	"github.com/tdewolff/canvas"
-	"github.com/tdewolff/canvas/renderers"
+	"golang.org/x/image/draw"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/math/fixed"
 )
 
-type DisplayListItem struct {
-	Box    *Box
-	Styles map[string]string
+func PaintNode(file *os.File, img *image.RGBA, displayListItem *DisplayListItem) {
+
+	posX := displayListItem.Box.Position.X
+	posY := displayListItem.Box.Position.Y
+	width := displayListItem.Box.Width
+	height := displayListItem.Box.Height
+
+	// Define the rectangles to draw
+	rect := image.Rect(posX, posY, posX+width, posY+height)
+
+	// Define the color to use for the rectangles
+	r, g, b, a := parseColor(displayListItem.Styles["background-color"])
+
+	col := color.RGBA{R: r, G: g, B: b, A: a}
+	draw.Draw(img, rect, &image.Uniform{col}, image.Point{}, draw.Src)
+	drawText(img, displayListItem)
 }
 
-func (dli *DisplayListItem) String() string {
-	// Convert the Box and Styles properties to strings
-	boxString := dli.Box.String()
-	stylesString := fmt.Sprintf("%+v", dli.Styles)
+func drawText(img *image.RGBA, displayListItem *DisplayListItem) {
 
-	// Return a string representation of the DisplayListItem
-	return fmt.Sprintf("DisplayListItem{Box: %s, Styles: %s}", boxString, stylesString)
-}
+	f := basicfont.Face7x13
+	text := displayListItem.Text
 
-type DisplayList []*DisplayListItem
-
-func (lt *LayoutTree) BuildDisplayList() DisplayList {
-	displayList := make(DisplayList, 0)
-	buildDisplayListForNode(lt.Root, &displayList)
-	return displayList
-}
-
-func buildDisplayListForNode(node *LayoutNode, displayList *DisplayList) {
-	// Add the current node's Box and Styles to the display list
-	displayListItem := &DisplayListItem{
-		Box:    node.Box,
-		Styles: node.RenderNode.Styles,
+	// Draw the text on the image
+	point := fixed.Point26_6{
+		X: fixed.I(displayListItem.Box.Position.X) + ((fixed.I(displayListItem.Box.Width) / 2) - (font.MeasureString(f, text) / 2)),
+		Y: fixed.I(displayListItem.Box.Position.Y) + (fixed.I(displayListItem.Box.Height) / 2),
 	}
-	*displayList = append(*displayList, displayListItem)
-
-	// Recursively call buildDisplayListForNode for each child node
-	for _, child := range node.Children {
-		buildDisplayListForNode(child, displayList)
+	d := &font.Drawer{
+		Dst:  img,
+		Src:  image.White,
+		Face: f,
+		Dot:  point,
 	}
+	d.DrawString(text)
 }
 
-// -------------------------------------------------------
-// -------------------------------------------------------
-// -------------------------------------------------------
-// -------------------------------------------------------
-// -------------------------------------------------------
-// -------------------------------------------------------
-// -------------------------------------------------------
-var c = canvas.New(300, 300)
-
-// Create a canvas context used to keep drawing state
-var ctx = canvas.NewContext(c)
-
-// Create a new RGBA image with the specified dimensions
-func PaintNode(displayListItem *DisplayListItem) {
-	// Create new canvas of dimension 100x100 mm
-
-	// Create a triangle path from an SVG path and draw it to the canvas
-	triangle := canvas.Rectangle(float64(displayListItem.Box.Width), float64(displayListItem.Box.Height))
-
-	fmt.Println(float64(displayListItem.Box.Width), float64(displayListItem.Box.Height))
-	ctx.SetFillColor(canvas.RGBA(parseColor(displayListItem.Styles["background-color"])))
-
-	fmt.Println(canvas.Aliceblue, canvas.RGBA(parseColor(displayListItem.Styles["background-color"])))
-	ctx.DrawPath(float64(displayListItem.Box.Position.X), float64(displayListItem.Box.Position.Y), triangle)
-
-	// Rasterize the canvas and write to a PNG file with 3.2 dots-per-mm (320x320 px)
-	renderers.Write("getting-started.png", c, canvas.DPMM(3.2))
-}
-
-func parseColor(colorString string) (uint8, uint8, uint8, float64) {
-	// Check if the color string is in the RGB format (e.g. "rgb(255, 0, 0)")
+// get the color from the CSS property
+func parseColor(colorString string) (uint8, uint8, uint8, uint8) {
 	if strings.HasPrefix(colorString, "rgb(") && strings.HasSuffix(colorString, ");") {
-		// Strip the "rgb(" and ")" prefix and suffix from the color string
+
 		colorString = strings.TrimPrefix(colorString, "rgb(")
 		colorString = strings.TrimSuffix(colorString, ");")
 
-		// Split the color string into the red, green, and blue components
 		parts := strings.Split(colorString, ",")
 
-		// Parse the red, green, and blue components as integers
 		r, err := strconv.Atoi(strings.TrimSpace(parts[0]))
-		g, err := strconv.Atoi(strings.TrimSpace(parts[1]))
-		b, err := strconv.Atoi(strings.TrimSpace(parts[2]))
-
-		// If any errors occurred during parsing, return the default color (black)
 		if err != nil {
-			return 0, 0, 0, 1
+			return 0, 0, 0, 255
 		}
 
-		// Return the parsed color components as integers in the range [0, 255]
-		return uint8(r), uint8(g), uint8(b), 1
+		g, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+		if err != nil {
+			return 0, 0, 0, 255
+		}
+
+		b, err := strconv.Atoi(strings.TrimSpace(parts[2]))
+
+		if err != nil {
+			return 0, 0, 0, 255
+		}
+
+		return uint8(r), uint8(g), uint8(b), 255
 	}
 
-	// If the color string is not in the RGB format, return the default color (black)
 	return 0, 0, 0, 0
 }
