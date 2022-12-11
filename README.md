@@ -8,6 +8,63 @@ Because why not?
 Okay. There's no fancy stuff like positioning, z-indexes, flexbox etc... it's very basic.
 It was really complex (for my level) and forgive me for errors in advance. Any contribution is welcomed!!
 
+<hr/>
+
+
+```html
+<html lang="en">
+<head>
+    <title>Pandora</title>
+</head>
+<body class="something">
+    <div id="container">
+        <p class="paragraph">Hello</p>
+        <p class="another-text">World</p>
+    </div>
+</body>
+</html>
+```
+```css
+html {
+    background-color: rgb(255, 224, 193);
+    width: 500px;
+    height: 500px;
+}
+
+body {
+    display: block;
+    background-color: rgb(99, 35, 0);
+    width: 480px;
+    height: 480px;
+    top: 10px;
+    left: 10px;
+}
+
+#container {
+    background-color: rgb(0, 126, 164);
+    width: 280px;
+    height: 280px;
+    top: 100px;
+    left: 100px;
+}
+
+.paragraph {
+    background-color: rgb(228, 139, 255);
+    width: 200px;
+    height: 100px;
+    top: 10px;
+    left: 10px;
+}
+
+.another-text {
+    background-color: rgb(0, 58, 103);
+    width: 140px;
+    height: 80px;
+    top: 120px;
+    left: 10px;
+}
+```
+
 <img src="image.png" alt="Pandora" border="0">
 
 Anyway you can play around with the `html` structure and the `css` rules (top, left, background-color)
