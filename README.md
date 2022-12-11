@@ -82,7 +82,7 @@ Joke... I've built Pandora because I wanted to learn how browser renders web pag
 
 Reading this amazing articles about building a <a href="https://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html" target="_blank">Browser engine</a> I decided to try to build one in Go (as I do not know anything about Rust).
 
-- Pandora takes a `.html` and `.css`files (or string if used in the browser)
+- Pandora takes a `.html` and `.css`files
 - Builds the `DOM tree` and a very basic `CSSOM`
 - Builds a `Render Tree` from the two
 - Builds a `Layout Tree` from the Render Tree
@@ -105,7 +105,7 @@ pandora --html example/example.html --css example/example
 
 Pandora can also be used as a WASI
 
-With WASMTIME
+With `wasmtime` (specify the directory for the `--dir` flag in which start looking for the files)
 
 ```bash
 wasmtime --dir . main.wasm -- --html example/example.html --css example/example.css
