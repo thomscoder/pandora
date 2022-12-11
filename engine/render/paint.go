@@ -3,7 +3,6 @@ package render
 import (
 	"image"
 	"image/color"
-	"os"
 	"strconv"
 	"strings"
 
@@ -13,7 +12,7 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
-func PaintNode(file *os.File, img *image.RGBA, displayListItem *DisplayListItem) {
+func PaintNode(img *image.RGBA, displayListItem *DisplayListItem) {
 
 	posX := displayListItem.Box.Position.X
 	posY := displayListItem.Box.Position.Y

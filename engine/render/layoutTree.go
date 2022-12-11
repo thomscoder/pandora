@@ -92,10 +92,6 @@ func buildLayoutTree(renderNode *RenderNode, position Point) *LayoutNode {
 	childY := box.Position.Y + box.Margin + box.Padding
 
 	for _, child := range renderNode.Children {
-		display := child.Styles["display"]
-		if display == "block" {
-			childY = layoutNode.Box.Position.Y + layoutNode.Box.Height + layoutNode.Box.Margin + layoutNode.Box.Padding
-		}
 		childLayout := buildLayoutTree(child, Point{X: childX, Y: childY})
 		layoutNode.Children = append(layoutNode.Children, childLayout)
 	}

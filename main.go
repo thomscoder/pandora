@@ -23,10 +23,10 @@ func check(err error) {
 }
 
 func main() {
-	_html, err := ioutil.ReadFile("example.html")
+	_html, err := ioutil.ReadFile("example/example.html")
 	check(err)
 
-	_css, err := ioutil.ReadFile("example.css")
+	_css, err := ioutil.ReadFile("example/example.css")
 	check(err)
 
 	rootNode, err := html.ParseHTML(string(_html))
@@ -41,13 +41,14 @@ func main() {
 	displayList := layoutTree.BuildDisplayList()
 
 	file, err := os.Create("image.png")
+	check(err)
 	defer file.Close()
 
 	img := image.NewRGBA(image.Rect(0, 0, 500, 500))
-	draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.ZP, draw.Src)
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.White}, image.Point{}, draw.Src)
 
 	for _, item := range displayList {
-		render.PaintNode(file, img, item)
+		render.PaintNode(img, item)
 	}
 
 	if err := png.Encode(file, img); err != nil {
